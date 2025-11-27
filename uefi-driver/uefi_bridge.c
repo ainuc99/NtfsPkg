@@ -782,7 +782,9 @@ NtfsReadFile(EFI_NTFS_FILE* File, VOID* Data, UINTN* Len)
 	ntfs_attr_close(na);
 
 	if (!NtfsIsVolumeReadOnly(File->FileSystem->NtfsVolume))
-		ntfs_inode_update_times(File->NtfsInode, NTFS_UPDATE_MCTIME);
+		// 2025/11/27 wave.lu (wave.lu@gmail.com)
+		// modified as just last_access_time, not modified & create time
+		ntfs_inode_update_times(File->NtfsInode, NTFS_UPDATE_ATIME);
 
 	return EFI_SUCCESS;
 }
