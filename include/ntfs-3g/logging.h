@@ -74,7 +74,11 @@ u32 ntfs_log_get_flags(void);
 /* Turn command-line options into logging flags */
 BOOL ntfs_log_parse_option(const char *option);
 
-int ntfs_log_redirect(const char *function, const char *file, int line,
+int
+#ifdef UEFI_DRIVER
+EFIAPI
+#endif
+ntfs_log_redirect(const char *function, const char *file, int line,
 	u32 level, void *data, const char *format, ...)
 	__attribute__((format(printf, 6, 7)));
 
@@ -105,7 +109,7 @@ int ntfs_log_redirect(const char *function, const char *file, int line,
 #define ntfs_log_critical(...) ntfs_log_redirect(__FUNCTION__,__FILE__,__LINE__,NTFS_LOG_LEVEL_CRITICAL,NULL,__VA_ARGS__)
 #define ntfs_log_error(...) ntfs_log_redirect(__FUNCTION__,__FILE__,__LINE__,NTFS_LOG_LEVEL_ERROR,NULL,__VA_ARGS__)
 #define ntfs_log_info(...) ntfs_log_redirect(__FUNCTION__,__FILE__,__LINE__,NTFS_LOG_LEVEL_INFO,NULL,__VA_ARGS__)
-#define ntfs_log_perror(...) ntfs_log_redirect(__FUNCTION__,__FILE__,__LINE__,NTFS_LOG_LEVEL_PERROR,NULL,__VA_ARGS__)
+#define ntfs_log_perror(fmt, ...) ntfs_log_redirect(__FUNCTION__,__FILE__,__LINE__,NTFS_LOG_LEVEL_PERROR,NULL,fmt "\n", ##__VA_ARGS__)
 #define ntfs_log_progress(...) ntfs_log_redirect(__FUNCTION__,__FILE__,__LINE__,NTFS_LOG_LEVEL_PROGRESS,NULL,__VA_ARGS__)
 #define ntfs_log_quiet(...) ntfs_log_redirect(__FUNCTION__,__FILE__,__LINE__,NTFS_LOG_LEVEL_QUIET,NULL,__VA_ARGS__)
 #define ntfs_log_verbose(...) ntfs_log_redirect(__FUNCTION__,__FILE__,__LINE__,NTFS_LOG_LEVEL_VERBOSE,NULL,__VA_ARGS__)
